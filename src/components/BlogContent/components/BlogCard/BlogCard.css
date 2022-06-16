@@ -1,0 +1,12 @@
+.post {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.postContent {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
