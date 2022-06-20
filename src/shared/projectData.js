@@ -1,3 +1,5 @@
+export const postsUrl = 'https://62af7b773bbf46a35222b577.mockapi.io/posts/';
+
 export const POSTS = [
     {
       id: 1,
@@ -9,7 +11,7 @@ export const POSTS = [
       id: 2,
       title: "Post 2",
       description: "Lorem ipsum dolor sit amet elit. Veritatis,vitae officia eum quis sed aut provident esse! Sunt, aperiam.Tempore corporis mollitia placeat delectus repudiandae animi, itaqueiusto similique aliquid. Possimus officiis neque, doloremque nonesse, ea natus autem modi explicabo quae nemo? Vitae, ex! Modi dictaenim nam quam, consectetur rem placeat vero saepe mollitia, deseruntsint dolor quod.",
-      liked:true,
+      liked:false,
     },
     {
       id: 3,

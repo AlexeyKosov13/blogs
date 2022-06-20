@@ -10,3 +10,20 @@
     flex-direction: column;
     align-items: start;
 }
+
+.postControl {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    
+}
+
+.editBtn svg {
+    width: 27px;
+    height: 27px;
+}
+
+.deleteBtn svg {
+    width: 30px;
+    height: 30px;
+}

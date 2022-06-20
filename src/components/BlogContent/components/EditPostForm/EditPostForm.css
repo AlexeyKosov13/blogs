@@ -1,4 +1,4 @@
-.addPostForm {
+.editPostForm {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -20,23 +20,23 @@
     cursor: pointer;
 }
 
-.addPostForm div + div {
+.editPostForm div + div {
     margin-top: 10px;
 }
 
-.addPostForm h2 {
+.editPostForm h2 {
     margin: 0;
     margin-bottom: 10px;
 }
 
-.addFormInput {
+.editFormInput {
     width: 100%;
     padding: 4px 5px;
     border-radius: 8px;
     border: 1px solid rgb(138, 136, 136)
 }
 
-.addFormInput:focus::placeholder {
+.editFormInput:focus::placeholder {
     color: transparent;
 }
 

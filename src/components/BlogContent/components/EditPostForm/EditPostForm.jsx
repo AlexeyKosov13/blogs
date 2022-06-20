@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-import "./AddPostForm.css";
+import "./EditPostForm.css";
 
-export class AddPostForm extends Component {
+export class EditPostForm extends Component {
   state = {
     postTitle: "",
     postDescr: "",
@@ -21,31 +21,10 @@ export class AddPostForm extends Component {
     });
   };
 
-
-  
-  //скрытие модального окна
-  handleAddFormHide = () => {
-    this.setState({
-      showAddForm: false,
-    });
-  };
-  
-  handleEscape = (e) => {
-    if (e.key === "Escape" ) {
-      console.log(1)
-      this.props.handleAddFormHide();
-    }
-  };
-
   componentDidMount() {
-     window.addEventListener("keyup", (e) => {
-      if (e.key === "Escape") this.handleEscape();
-
+    window.addEventListener("keyup", (e) => {
+      if (e.key === "Escape") this.handlePostDescrChange();
     });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleEscape);
   }
 
   createPost = (e) => {
@@ -56,42 +35,43 @@ export class AddPostForm extends Component {
       liked: false,
     };
     this.props.addNewBlogPost(post);
-    this.props.handleAddFormHide();
+    this.props.handleEditFormHide();
   };
 
-  //отправка формы при нажатии enter
-  handleEnter = (e) => {
-    e.preventDefault();
-    if (e.key === "Enter" && this.state.showAddForm) {
-      this.createPost();
-    }
-  };
+  // //отправка формы при нажатии enter
+  // handleEnter = (e) => {
+  //   e.preventDefault();
+  //   if (e.key === "Enter" && this.state.showAddForm) {
+  //     this.createPost();
+  //   }
+  // };
 
-  componentDidMount() {
-    window.addEventListener("keyup", this.handleEnter);
-  }
+  // componentDidMount() {
+  //   this.getPosts();
+  //   window.addEventListener("keyup", this.handleEnter);
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleEnter);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener("keyup", this.handleEnter);
+  // }
 
   render() {
-    const handleAddFormHide = this.handleAddFormHide;
+    const handleEditFormHide = this.handleEditFormHide;
 
     return (
       <>
-        <form action="" className="addPostForm" onSubmit={this.createPost}>
-          <button className="hideBtn" onClick={handleAddFormHide}>
+        <form action="" className="editPostForm" onSubmit={this.createPost}>
+          <button className="hideBtn" onClick={handleEditFormHide}>
             <CancelIcon />
           </button>
 
-          <h2>Создание поста</h2>
+          <h2>Редактирование поста</h2>
           <div>
             <input
               type="text"
               name="postTitle"
               placeholder="Заголовок поста..."
-              className="addFormInput"
+              className="editFormInput"
               value={this.state.postTitle}
               onChange={this.handlePostTitleChange}
             />
@@ -100,18 +80,18 @@ export class AddPostForm extends Component {
             <textarea
               name="postDescr"
               placeholder="Описание поста..."
-              className="addFormInput"
+              className="editFormInput"
               value={this.state.postDescr}
               onChange={this.handlePostDescrChange}
             />
           </div>
           <div>
             <button type="submit" className="blackBtn">
-              Добавить пост
+              Сохранить
             </button>
           </div>
         </form>
-        <div className="overlay"></div>
+        <div className="overlay" onClick={handleEditFormHide}></div>
       </>
     );
   }

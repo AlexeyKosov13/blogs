@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CreateIcon from "@mui/icons-material/Create";
 
 import "./BlogCard.css";
 
-export const BlogCard = ({ title, descr, liked, likePost, deletePost }) => {
+export const BlogCard = ({ title, descr, liked, likePost, deletePost, handleEditFormShow }) => {
   const heartFill = liked ? "crimson" : "black";
 
   return (
@@ -18,9 +19,14 @@ export const BlogCard = ({ title, descr, liked, likePost, deletePost }) => {
           </button>
         </div>
       </div>
-      <button onClick={()=>deletePost()}>
-        <DeleteForeverIcon />
-      </button>
+      <div className="postControl">
+        <button onClick={() => handleEditFormShow()} className="editBtn">
+          <CreateIcon />
+        </button>
+        <button onClick={() => deletePost()} className="deleteBtn">
+          <DeleteForeverIcon />
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,13 @@
 .count {
     text-align: center;
+    position: relative;
+}
+
+.count .preloader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    color: black;
 }
 
 /* .count button {
@@ -21,4 +29,6 @@
 .posts {
     max-width: 600px;
     margin: 0 auto;
+    position: relative;
 }
+
