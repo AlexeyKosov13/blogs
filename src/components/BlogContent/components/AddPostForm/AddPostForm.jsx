@@ -24,11 +24,12 @@ export class AddPostForm extends Component {
 
   
   //скрытие модального окна
-  handleAddFormHide = () => {
-    this.setState({
-      showAddForm: false,
-    });
-  };
+  // handleAddFormHide = () => {
+  //   console.log(1)
+  //   this.setState({
+  //     showAddForm: false,
+  //   });
+  // };
   
   handleEscape = (e) => {
     if (e.key === "Escape" ) {
@@ -38,10 +39,7 @@ export class AddPostForm extends Component {
   };
 
   componentDidMount() {
-     window.addEventListener("keyup", (e) => {
-      if (e.key === "Escape") this.handleEscape();
-
-    });
+     window.addEventListener("keyup",  this.handleEscape);
   }
 
   componentWillUnmount() {
@@ -67,16 +65,10 @@ export class AddPostForm extends Component {
     }
   };
 
-  componentDidMount() {
-    window.addEventListener("keyup", this.handleEnter);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleEnter);
-  }
+ 
 
   render() {
-    const handleAddFormHide = this.handleAddFormHide;
+    const handleAddFormHide = this.props.handleAddFormHide;
 
     return (
       <>
@@ -111,7 +103,7 @@ export class AddPostForm extends Component {
             </button>
           </div>
         </form>
-        <div className="overlay"></div>
+        <div className="overlay" onClick={handleAddFormHide}></div>
       </>
     );
   }

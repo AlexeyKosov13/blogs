@@ -5,7 +5,22 @@ import CreateIcon from "@mui/icons-material/Create";
 
 import "./BlogCard.css";
 
-export const BlogCard = ({ title, descr, liked, likePost, deletePost, handleEditFormShow }) => {
+export const BlogCard = ({
+  title,
+  descr,
+  liked,
+  likePost,
+  deletePost,
+  handleEditFormShow,
+  handleSelectPost,
+}) => {
+
+  const showEditForm = () => {
+    handleSelectPost();
+    handleEditFormShow();
+    
+  }
+
   const heartFill = liked ? "crimson" : "black";
 
   return (
@@ -20,10 +35,10 @@ export const BlogCard = ({ title, descr, liked, likePost, deletePost, handleEdit
         </div>
       </div>
       <div className="postControl">
-        <button onClick={() => handleEditFormShow()} className="editBtn">
+        <button onClick={showEditForm} className="editBtn">
           <CreateIcon />
         </button>
-        <button onClick={() => deletePost()} className="deleteBtn">
+        <button onClick={deletePost} className="deleteBtn">
           <DeleteForeverIcon />
         </button>
       </div>

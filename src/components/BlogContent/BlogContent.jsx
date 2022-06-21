@@ -14,6 +14,7 @@ export class BlogContent extends Component {
     showEditForm: false,
     blogArr: [],
     isPanding: false,
+    selectedPost:{},
   };
 
   //============методы======
@@ -57,9 +58,23 @@ export class BlogContent extends Component {
         this.getPosts();
       })
       .catch((err) => {
-        console.log(err);
+        console.log('Не удалось добавить пост');
       });
   };
+
+  // изменение поста 
+  editBlogPost = (updatedBlogPost) => {
+    this.setState({
+      isPanding: true,
+    });
+    axios.put(`${postsUrl}${updatedBlogPost.id}`, updatedBlogPost)
+    .then((response) => {
+      this.getPosts();
+    })
+    .catch((err) => {
+      console.log("Не удалось изменить пост");
+    });
+  }
 
   // удалиение поста
   deletePost = (blogPost) => {
@@ -70,7 +85,6 @@ export class BlogContent extends Component {
       axios
         .delete(`${postsUrl}${blogPost.id}`)
         .then((response) => {
-          console.log("Пост удален => ", response.deta);
           this.getPosts();
         })
         .catch((err) => {
@@ -79,10 +93,6 @@ export class BlogContent extends Component {
     }
   };
 
-  //редактирование поста
-  editPost = (blogPost) => {
-    
-  }
 
   //показ модального окна
   handleAddFormShow = () => {
@@ -93,6 +103,7 @@ export class BlogContent extends Component {
 
   //скрытие модального окна
   handleAddFormHide = () => {
+    console.log(1)
     this.setState({
       showAddForm: false,
     });
@@ -112,24 +123,16 @@ export class BlogContent extends Component {
     });
   };
 
-  //скрытие при нажатии esc
-  handleEscape = (e) => {
-    if (e.key === "Escape" ) {
-      this.handleAddFormHide();
-      this.handleEditFormHide();
-    }
-  };
-
+  //редактирование поста
+  handleSelectPost = (blogPost) => {
+    this.setState({
+      selectedPost: blogPost,
+    })
+  }
+ 
   componentDidMount() {
-    this.getPosts();
-    window.addEventListener("keyup", this.handleEscape);
+    this.getPosts(); 
   }
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleEscape);
-  }
-
-  
 
   render() {
     //=======пробегаем по массиву с данными
@@ -142,9 +145,8 @@ export class BlogContent extends Component {
           liked={item.liked}
           likePost={() => this.likePost(item)}
           deletePost={() => this.deletePost(item)}
-          editPost ={() => this.editPost(item)}
-          handleAddFormHide ={this.handleAddFormHide}
-          handleEditFormShow ={this.handleEditFormShow}
+          handleEditFormShow={this.handleEditFormShow}
+          handleSelectPost={()=> this.handleSelectPost(item)}
         />
       );
     });
@@ -166,9 +168,10 @@ export class BlogContent extends Component {
 
           {this.state.showEditForm && (
             <EditPostForm 
-            blogArr={this.state.blogArr}
-            addNewBlogPost={this.addNewBlogPost}
+            blogArr={this.state.blogArr}   
+            editBlogPost={this.editBlogPost}
             handleEditFormHide={this.handleEditFormHide}
+            selectedPost ={this.state.selectedPost}
             />
           )}
 

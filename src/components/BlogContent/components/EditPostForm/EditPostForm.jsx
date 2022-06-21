@@ -5,8 +5,8 @@ import "./EditPostForm.css";
 
 export class EditPostForm extends Component {
   state = {
-    postTitle: "",
-    postDescr: "",
+    postTitle: this.props.selectedPost.title,
+    postDescr: this.props.selectedPost.description,
   };
 
   handlePostTitleChange = (e) => {
@@ -21,46 +21,39 @@ export class EditPostForm extends Component {
     });
   };
 
-  componentDidMount() {
-    window.addEventListener("keyup", (e) => {
-      if (e.key === "Escape") this.handlePostDescrChange();
-    });
-  }
-
-  createPost = (e) => {
+  savePost = (e) => {
     e.preventDefault();
     const post = {
+      id: this.props.selectedPost.id,
       title: this.state.postTitle,
       description: this.state.postDescr,
-      liked: false,
+      liked: this.props.selectedPost.liked,
     };
-    this.props.addNewBlogPost(post);
+    this.props.editBlogPost(post);
     this.props.handleEditFormHide();
   };
 
-  // //отправка формы при нажатии enter
-  // handleEnter = (e) => {
-  //   e.preventDefault();
-  //   if (e.key === "Enter" && this.state.showAddForm) {
-  //     this.createPost();
-  //   }
-  // };
+  handleEscape = (e) => {
+    if (e.key === "Escape" ) {
+      console.log(1)
+      this.props.handleEditFormHide();
+    }
+  };
 
-  // componentDidMount() {
-  //   this.getPosts();
-  //   window.addEventListener("keyup", this.handleEnter);
-  // }
+  componentDidMount() {
+     window.addEventListener("keyup",  this.handleEscape);
+  }
 
-  // componentWillUnmount() {
-  //   window.removeEventListener("keyup", this.handleEnter);
-  // }
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.handleEscape);
+  }
 
   render() {
-    const handleEditFormHide = this.handleEditFormHide;
+    const handleEditFormHide = this.props.handleEditFormHide;
 
     return (
       <>
-        <form action="" className="editPostForm" onSubmit={this.createPost}>
+        <form action="" className="editPostForm" onSubmit={this.savePost}>
           <button className="hideBtn" onClick={handleEditFormHide}>
             <CancelIcon />
           </button>
