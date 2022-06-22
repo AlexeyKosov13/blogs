@@ -20,16 +20,6 @@ export class AddPostForm extends Component {
       postDescr: e.target.value,
     });
   };
-
-
-  
-  //скрытие модального окна
-  // handleAddFormHide = () => {
-  //   console.log(1)
-  //   this.setState({
-  //     showAddForm: false,
-  //   });
-  // };
   
   handleEscape = (e) => {
     if (e.key === "Escape" ) {

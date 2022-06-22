@@ -11,16 +11,17 @@ import "./App.css";
 
 export function App() {
 
-  const [isLogIn, setIsLoggIn] = useState(false);
+  const [isLogIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') ==='true');
+  const [userName, setUserName] = useState(localStorage.getItem('userName'));
 
   return (
     <Router>
       <div className="App">
-        <Header />
+        <Header isLogIn={isLogIn} setIsLoggedIn={setIsLoggedIn} userName={userName} />
         <main>
           <Routes>
-            <Route path="/" element={<BlogPage />} exact />
-            <Route path="/login" element={<LoginPage/>} exact />
+            <Route path="/" element={<BlogPage isLogIn={isLogIn} setIsLoggedIn={setIsLoggedIn} />} exact />
+            <Route path="/login" element={<LoginPage  isLogIn={isLogIn} setIsLoggedIn={setIsLoggedIn} setUserName={setUserName}/>} exact />
           </Routes>
         </main>
 
