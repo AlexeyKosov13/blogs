@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { postsUrl } from "../../shared/projectData";
 import { BlogCard } from "./components/BlogCard/BlogCard";
-
-import "./BlogContent.css";
 import { AddPostForm } from "./components/AddPostForm/AddPostForm";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { EditPostForm } from "./components/EditPostForm/EditPostForm";
 
-export class BlogContent extends Component {
+import "./BlogPage.css";
+
+let source; 
+
+export class BlogPage extends Component {
   state = {
     showAddForm: false,
     showEditForm: false,
@@ -21,8 +23,10 @@ export class BlogContent extends Component {
 
   //получение с сервера базы
   getPosts = () => {
+    source = axios.CancelToken.source();
+    
     axios
-      .get(postsUrl)
+      .get(postsUrl, source.token)
       .then((response) => {
         this.setState({
           blogArr: response.data,
@@ -33,6 +37,16 @@ export class BlogContent extends Component {
         console.log(err);
       });
   };
+
+  componentDidMount() {
+    this.getPosts(); 
+  }
+
+  componentWillUnmount() {
+    if (source) {
+      source.cancel();
+    }
+  }
 
   // лайк поста
   likePost = (blogPost) => {
@@ -93,6 +107,8 @@ export class BlogContent extends Component {
     }
   };
 
+  
+
 
   //показ модального окна
   handleAddFormShow = () => {
@@ -130,9 +146,7 @@ export class BlogContent extends Component {
     })
   }
  
-  componentDidMount() {
-    this.getPosts(); 
-  }
+ 
 
   render() {
     //=======пробегаем по массиву с данными

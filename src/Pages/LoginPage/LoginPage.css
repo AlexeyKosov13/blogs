@@ -1,0 +1,40 @@
+.loginPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm {
+    background-color: white;
+    width: 350px;
+    padding: 20px;
+    text-align: center;
+}
+
+.loginForm button {
+    width: 100%;
+}
+
+
+.loginForm div + div {
+    margin-top: 10px;
+}
+
+.loginPage h2 {
+    margin: 0;
+    font-size: 34px;
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+.loginFormInput {
+    width: 100%;
+    padding: 4px 5px;
+    border-radius: 8px;
+    border: 1px solid rgb(138, 136, 136)
+}
+
+.loginFormInput:focus::placeholder {
+    color: transparent;
+}

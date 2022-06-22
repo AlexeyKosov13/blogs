@@ -86,6 +86,7 @@ export class AddPostForm extends Component {
               className="addFormInput"
               value={this.state.postTitle}
               onChange={this.handlePostTitleChange}
+              required
             />
           </div>
           <div>
@@ -95,6 +96,7 @@ export class AddPostForm extends Component {
               className="addFormInput"
               value={this.state.postDescr}
               onChange={this.handlePostDescrChange}
+              required
             />
           </div>
           <div>
