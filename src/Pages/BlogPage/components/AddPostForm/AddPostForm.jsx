@@ -1,68 +1,49 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 import "./AddPostForm.css";
 
-export class AddPostForm extends Component {
-  state = {
-    postTitle: "",
-    postDescr: "",
+export const AddPostForm = (props) => {
+ 
+  const [postTitle, setPostTitle] = useState('');
+  const [postDescr, setPostDescr] = useState('');
+
+  const handlePostTitleChange = (e) => {
+    setPostTitle(e.target.value);
   };
 
-  handlePostTitleChange = (e) => {
-    this.setState({
-      postTitle: e.target.value,
-    });
+  const handlePostDescrChange = (e) => {
+    setPostDescr(e.target.value);
   };
+ 
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" ) {
+        props.handleEditFormHide();
+      }
+    };
+    window.addEventListener("keyup", handleEscape);
 
-  handlePostDescrChange = (e) => {
-    this.setState({
-      postDescr: e.target.value,
-    });
-  };
-  
-  handleEscape = (e) => {
-    if (e.key === "Escape" ) {
-      console.log(1)
-      this.props.handleAddFormHide();
-    }
-  };
+    return () => window.removeEventListener('keyup', handleEscape)
+  }, [props])
 
-  componentDidMount() {
-     window.addEventListener("keyup",  this.handleEscape);
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.handleEscape);
-  }
-
-  createPost = (e) => {
+  const createPost = (e) => {
     e.preventDefault();
     const post = {
-      title: this.state.postTitle,
-      description: this.state.postDescr,
+      title: postTitle,
+      description: postDescr,
       liked: false,
     };
-    this.props.addNewBlogPost(post);
-    this.props.handleAddFormHide();
+    props.addNewBlogPost(post);
+    props.handleAddFormHide();
   };
 
-  //отправка формы при нажатии enter
-  handleEnter = (e) => {
-    e.preventDefault();
-    if (e.key === "Enter" && this.state.showAddForm) {
-      this.createPost();
-    }
-  };
+    const handleAddFormHide = props.handleAddFormHide;
 
- 
-
-  render() {
-    const handleAddFormHide = this.props.handleAddFormHide;
-
-    return (
+  return (
       <>
-        <form action="" className="addPostForm" onSubmit={this.createPost}>
+        <form action="" className="addPostForm" onSubmit={createPost}>
           <button className="hideBtn" onClick={handleAddFormHide}>
             <CancelIcon />
           </button>
@@ -74,8 +55,8 @@ export class AddPostForm extends Component {
               name="postTitle"
               placeholder="Заголовок поста..."
               className="addFormInput"
-              value={this.state.postTitle}
-              onChange={this.handlePostTitleChange}
+              value={postTitle}
+              onChange={handlePostTitleChange}
               required
             />
           </div>
@@ -84,8 +65,8 @@ export class AddPostForm extends Component {
               name="postDescr"
               placeholder="Описание поста..."
               className="addFormInput"
-              value={this.state.postDescr}
-              onChange={this.handlePostDescrChange}
+              value={postDescr}
+              onChange={handlePostDescrChange}
               required
             />
           </div>
@@ -99,4 +80,3 @@ export class AddPostForm extends Component {
       </>
     );
   }
-}

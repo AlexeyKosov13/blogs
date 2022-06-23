@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CreateIcon from "@mui/icons-material/Create";

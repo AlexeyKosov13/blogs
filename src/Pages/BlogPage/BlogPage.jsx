@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import { postsUrl } from "../../shared/projectData";
 import { BlogCard } from "./components/BlogCard/BlogCard";
 import { AddPostForm } from "./components/AddPostForm/AddPostForm";
@@ -8,53 +8,56 @@ import { EditPostForm } from "./components/EditPostForm/EditPostForm";
 
 import "./BlogPage.css";
 
+
+
 let source; 
 
-export class BlogPage extends Component {
-  state = {
-    showAddForm: false,
-    showEditForm: false,
-    blogArr: [],
-    isPanding: false,
-    selectedPost:{},
-  };
+export const BlogPage = () => {
+  
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [blogArr, setBlogArr] = useState([]);
+  const [isPanding, setIsPanding] = useState(false);
+  const [selectedPost, setSelectedPost] = useState({});
 
   //============методы======
 
   //получение с сервера базы
-  getPosts = () => {
+  const getPosts = () => {
     source = axios.CancelToken.source();
     
     axios
       .get(postsUrl, source.token)
       .then((response) => {
-        this.setState({
-          blogArr: response.data,
-          isPanding: false,
-        });
+        setBlogArr(response.data);
+        setIsPanding(false);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  componentDidMount() {
-    this.getPosts(); 
-  }
+  useEffect(() => {
+    getPosts();
+  },[])
 
-  componentWillUnmount() {
-    if (source) {
-      source.cancel();
-    }
-  }
+  // componentDidMount() {
+  //   this.getPosts(); 
+  // }
+
+  // componentWillUnmount() {
+  //   if (source) {
+  //     source.cancel();
+  //   }
+  // }
 
   // лайк поста
-  likePost = (blogPost) => {
+  const likePost = (blogPost) => {
     const temp = {...blogPost};
     temp.liked = !temp.liked;
     axios.put(`${postsUrl}${blogPost.id}`, temp)
     .then((response) => {
-      this.getPosts();
+      getPosts();
     })
     .catch ((err) => {
       console.log('Не удалось изменить')
@@ -62,14 +65,12 @@ export class BlogPage extends Component {
   };
 
   //добавление поста
-  addNewBlogPost = (blogPost) => {
-    this.setState({
-      isPanding: true,
-    });
+  const addNewBlogPost = (blogPost) => {
+    setIsPanding(true);
     axios
       .post(`${postsUrl}`, blogPost)
       .then((response) => {
-        this.getPosts();
+        getPosts();
       })
       .catch((err) => {
         console.log('Не удалось добавить пост');
@@ -77,13 +78,11 @@ export class BlogPage extends Component {
   };
 
   // изменение поста 
-  editBlogPost = (updatedBlogPost) => {
-    this.setState({
-      isPanding: true,
-    });
+  const editBlogPost = (updatedBlogPost) => {
+    setIsPanding(true);
     axios.put(`${postsUrl}${updatedBlogPost.id}`, updatedBlogPost)
     .then((response) => {
-      this.getPosts();
+      getPosts();
     })
     .catch((err) => {
       console.log("Не удалось изменить пост");
@@ -91,15 +90,13 @@ export class BlogPage extends Component {
   }
 
   // удалиение поста
-  deletePost = (blogPost) => {
+  const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-      this.setState({
-        isPanding: true,
-      });
+      setIsPanding(true);
       axios
         .delete(`${postsUrl}${blogPost.id}`)
         .then((response) => {
-          this.getPosts();
+          getPosts();
         })
         .catch((err) => {
           console.log("Не удалось удалить пост");
@@ -111,96 +108,81 @@ export class BlogPage extends Component {
 
 
   //показ модального окна
-  handleAddFormShow = () => {
-    this.setState({
-      showAddForm: true,
-    });
+  const handleAddFormShow = () => {
+    setShowAddForm(true);
   };
 
   //скрытие модального окна
-  handleAddFormHide = () => {
-    console.log(1)
-    this.setState({
-      showAddForm: false,
-    });
+  const handleAddFormHide = () => {
+    setShowAddForm(false);
   };
 
   //показ модального окна
-  handleEditFormShow = () => {
-    this.setState({
-      showEditForm: true,
-    });
+  const handleEditFormShow = () => {
+    setShowEditForm(true);
   };
 
   //скрытие модального окна
-  handleEditFormHide = () => {
-    this.setState({
-      showEditForm: false,
-    });
+  const handleEditFormHide = () => {
+    setShowEditForm(false);
   };
 
   //редактирование поста
-  handleSelectPost = (blogPost) => {
-    this.setState({
-      selectedPost: blogPost,
-    })
+  const handleSelectPost = (blogPost) => {
+    setSelectedPost(blogPost);
   }
  
- 
-
-  render() {
     //=======пробегаем по массиву с данными
-    const blogPosts = this.state.blogArr.map((item) => {
+    const blogPosts = blogArr.map((item) => {
       return (
         <BlogCard
           key={item.id}
           title={item.title}
           descr={item.description}
           liked={item.liked}
-          likePost={() => this.likePost(item)}
-          deletePost={() => this.deletePost(item)}
-          handleEditFormShow={this.handleEditFormShow}
-          handleSelectPost={()=> this.handleSelectPost(item)}
+          likePost={() => likePost(item)}
+          deletePost={() => deletePost(item)}
+          handleEditFormShow={handleEditFormShow}
+          handleSelectPost={()=> handleSelectPost(item)}
         />
       );
     });
 
-    if (this.state.blogArr.length === 0) return <h1>Загружаю данные...</h1>;
+    if (blogArr.length === 0) return <h1>Загружаю данные...</h1>;
 
 
-    const postsOpacity  = this.state.isPanding ? 0.5: 1;
+    const postsOpacity  = isPanding ? 0.5: 1;
 
     return (
       <div className="count">
-        {this.state.showAddForm && (
+        {showAddForm && (
           <AddPostForm
-            blogArr={this.state.blogArr}
-            addNewBlogPost={this.addNewBlogPost}
-            handleAddFormHide={this.handleAddFormHide}
+            blogArr={blogArr}
+            addNewBlogPost={addNewBlogPost}
+            handleAddFormHide={handleAddFormHide}
           />
         )}
 
-          {this.state.showEditForm && (
+          {showEditForm && (
             <EditPostForm 
-            blogArr={this.state.blogArr}   
-            editBlogPost={this.editBlogPost}
-            handleEditFormHide={this.handleEditFormHide}
-            selectedPost ={this.state.selectedPost}
+            blogArr={blogArr}   
+            editBlogPost={editBlogPost}
+            handleEditFormHide={handleEditFormHide}
+            selectedPost ={selectedPost}
             />
           )}
 
         <>
           <h1>Simple Blog</h1>
-          <button className="blackBtn" onClick={this.handleAddFormShow}>
+          <button className="blackBtn" onClick={handleAddFormShow}>
             Создать новый пост
           </button>        
           <div className="posts" style={{opacity: postsOpacity}} >
             {blogPosts}</div>
         </>
 
-        {this.state.isPanding && <CircularProgress  className="preloader"/>}
+        {isPanding && <CircularProgress  className="preloader"/>}
 
       </div>
     );
-  }
 }
