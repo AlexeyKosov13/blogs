@@ -13,6 +13,7 @@ export const BlogCard = ({
   deletePost,
   handleEditFormShow,
   handleSelectPost,
+  isAdmin,
 }) => {
 
   const showEditForm = () => {
@@ -34,14 +35,14 @@ export const BlogCard = ({
           </button>
         </div>
       </div>
-      <div className="postControl">
+      {isAdmin && (<div className="postControl">
         <button onClick={showEditForm} className="editBtn">
           <CreateIcon />
         </button>
         <button onClick={deletePost} className="deleteBtn">
           <DeleteForeverIcon />
         </button>
-      </div>
+      </div>)}
     </div>
   );
 };

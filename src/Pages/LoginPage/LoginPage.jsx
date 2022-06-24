@@ -1,29 +1,40 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { UseAuth } from "../../Hook/UseAuth";
 import "./LoginPage.css";
 
-export const LoginPage = ({ setIsLoggedIn, setUserName }) => {
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+export const LoginPage = ({ setIsLoggedIn, setUserName, setIsAdmin }) => {
+  // const [login, setLogin] = useState("");
+  // const [password, setPassword] = useState("");
+
+  const {signin} = UseAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  // const fromPage = location.state?.from?.pathname || '/blog';
+  const fromPage = '/blog';
 
-  const handleLoginChange = (e) => {
-    setLogin(e.target.value)
-  }
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value)
-  }
-
+ //====авторизация=====
   const handleLogIn = (e) => {
     e.preventDefault();
 
-    localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('userName', login);
+    const form = e.target;
+    const user = form.username.value;
+    const password = form.password.value;
 
-    setUserName(login);
+    signin(user, () => navigate(fromPage, {repalce: true}))
+
+    localStorage.setItem('isLoggedIn', true);
+    localStorage.setItem('userName', user);
+    localStorage.setItem('isAdmin', false);
+
+    if(user === 'admin' && password === '123') {
+      setIsAdmin(true);
+      localStorage.setItem('isAdmin', true);
+    }
+
+    setUserName(user);
     setIsLoggedIn(true);
-    navigate("/");
   };
 
   return (
@@ -33,10 +44,11 @@ export const LoginPage = ({ setIsLoggedIn, setUserName }) => {
         <div>
           <input
             type="text"
+            name="username"
             placeholder="Логин"
             className="loginFormInput"
             required
-            onChange={handleLoginChange}
+           
 
           />
         </div>
@@ -44,9 +56,10 @@ export const LoginPage = ({ setIsLoggedIn, setUserName }) => {
           <input
             type="password"
             placeholder="Пароль"
+            name="password"
             className="loginFormInput"
             required
-            onChange={handlePasswordChange}
+           
           />
         </div>
         <div>

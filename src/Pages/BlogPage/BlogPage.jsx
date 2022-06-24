@@ -8,11 +8,9 @@ import { EditPostForm } from "./components/EditPostForm/EditPostForm";
 
 import "./BlogPage.css";
 
-
-
 let source; 
 
-export const BlogPage = () => {
+export const BlogPage = ({isAdmin}) => {
   
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -41,15 +39,6 @@ export const BlogPage = () => {
     getPosts();
   },[])
 
-  // componentDidMount() {
-  //   this.getPosts(); 
-  // }
-
-  // componentWillUnmount() {
-  //   if (source) {
-  //     source.cancel();
-  //   }
-  // }
 
   // лайк поста
   const likePost = (blogPost) => {
@@ -104,9 +93,6 @@ export const BlogPage = () => {
     }
   };
 
-  
-
-
   //показ модального окна
   const handleAddFormShow = () => {
     setShowAddForm(true);
@@ -144,12 +130,12 @@ export const BlogPage = () => {
           deletePost={() => deletePost(item)}
           handleEditFormShow={handleEditFormShow}
           handleSelectPost={()=> handleSelectPost(item)}
+          isAdmin={isAdmin}
         />
       );
     });
 
     if (blogArr.length === 0) return <h1>Загружаю данные...</h1>;
-
 
     const postsOpacity  = isPanding ? 0.5: 1;
 
@@ -174,9 +160,11 @@ export const BlogPage = () => {
 
         <>
           <h1>Simple Blog</h1>
-          <button className="blackBtn" onClick={handleAddFormShow}>
+
+          {isAdmin && <button className="blackBtn" onClick={handleAddFormShow}>
             Создать новый пост
-          </button>        
+          </button> }
+                 
           <div className="posts" style={{opacity: postsOpacity}} >
             {blogPosts}</div>
         </>
