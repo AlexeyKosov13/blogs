@@ -4,7 +4,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import "./EditPostForm.css";
 
 export const EditPostForm = (props) => {
-  console.log(props);
   const [postTitle, setPostTitle] = useState(props.selectedPost.title);
   const [postDescr, setPostDescr] = useState(props.selectedPost.description);
 

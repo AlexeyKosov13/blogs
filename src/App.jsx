@@ -5,7 +5,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useState } from "react";
-
+import { BlogCard } from "./Pages/BlogPage/components/BlogCard/BlogCard";
+import { BlogCardPage } from "./Pages/BlogPage/components/BlogCardPage/BlogCardPage";
 import { BlogPage } from "./Pages/BlogPage/BlogPage";
 import { LoginPage } from "./Pages/LoginPage/LoginPage";
 import { Footer } from "./components/Footer/Footer";
@@ -20,17 +21,16 @@ export function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
-  
-  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('isAdmin') === 'true');
+
+  const [isAdmin, setIsAdmin] = useState(
+    localStorage.getItem("isAdmin") === "true"
+  );
 
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <Header
-            isLoggedIn={isLoggedIn}
-            setIsLoggedIn={setIsLoggedIn}
-          />
+          <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <main>
             <Routes>
               <Route
@@ -59,6 +59,16 @@ export function App() {
                 element={
                   <RequireAuth>
                     <BlogPage isAdmin={isAdmin} />
+                  </RequireAuth>
+                }
+                exact
+              />
+
+              <Route
+                path="/blog/:postId"
+                element={
+                  <RequireAuth>
+                    <BlogCardPage isAdmin={isAdmin} />
                   </RequireAuth>
                 }
                 exact

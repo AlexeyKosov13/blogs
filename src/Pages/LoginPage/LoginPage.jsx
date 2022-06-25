@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { useNavigate, useLocation } from "react-router-dom";
 import { UseAuth } from "../../Hook/UseAuth";
 import "./LoginPage.css";
@@ -25,13 +25,19 @@ export const LoginPage = ({ setIsLoggedIn, setUserName, setIsAdmin }) => {
     signin(user, () => navigate(fromPage, {repalce: true}))
 
     localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('userName', user);
     localStorage.setItem('isAdmin', false);
 
-    if(user === 'admin' && password === '123') {
-      setIsAdmin(true);
+    if(user === 'admin' ) {
+      if (password === '123') {
+        setIsAdmin(true);
       localStorage.setItem('isAdmin', true);
+      } else {
+        alert('Введите правилный логин или пароль!')
+        return false
+      }   
     }
+
+
 
     setUserName(user);
     setIsLoggedIn(true);

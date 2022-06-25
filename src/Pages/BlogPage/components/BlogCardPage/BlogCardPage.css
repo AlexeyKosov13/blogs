@@ -9,11 +9,6 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    justify-content: start;
-}
-
-.postContent p {
-    text-align: start;
 }
 
 .postControl {

@@ -5,13 +5,13 @@ import { AddPostForm } from "./components/AddPostForm/AddPostForm";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { EditPostForm } from "./components/EditPostForm/EditPostForm";
+import { Link } from "react-router-dom";
 
 import "./BlogPage.css";
 
-let source; 
+let source;
 
-export const BlogPage = ({isAdmin}) => {
-  
+export const BlogPage = ({ isAdmin }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [blogArr, setBlogArr] = useState([]);
@@ -23,7 +23,7 @@ export const BlogPage = ({isAdmin}) => {
   //получение с сервера базы
   const getPosts = () => {
     source = axios.CancelToken.source();
-    
+
     axios
       .get(postsUrl, source.token)
       .then((response) => {
@@ -37,20 +37,20 @@ export const BlogPage = ({isAdmin}) => {
 
   useEffect(() => {
     getPosts();
-  },[])
-
+  }, []);
 
   // лайк поста
   const likePost = (blogPost) => {
-    const temp = {...blogPost};
+    const temp = { ...blogPost };
     temp.liked = !temp.liked;
-    axios.put(`${postsUrl}${blogPost.id}`, temp)
-    .then((response) => {
-      getPosts();
-    })
-    .catch ((err) => {
-      console.log('Не удалось изменить')
-    })
+    axios
+      .put(`${postsUrl}${blogPost.id}`, temp)
+      .then((response) => {
+        getPosts();
+      })
+      .catch((err) => {
+        console.log("Не удалось изменить");
+      });
   };
 
   //добавление поста
@@ -62,21 +62,22 @@ export const BlogPage = ({isAdmin}) => {
         getPosts();
       })
       .catch((err) => {
-        console.log('Не удалось добавить пост');
+        console.log("Не удалось добавить пост");
       });
   };
 
-  // изменение поста 
+  // изменение поста
   const editBlogPost = (updatedBlogPost) => {
     setIsPanding(true);
-    axios.put(`${postsUrl}${updatedBlogPost.id}`, updatedBlogPost)
-    .then((response) => {
-      getPosts();
-    })
-    .catch((err) => {
-      console.log("Не удалось изменить пост");
-    });
-  }
+    axios
+      .put(`${postsUrl}${updatedBlogPost.id}`, updatedBlogPost)
+      .then((response) => {
+        getPosts();
+      })
+      .catch((err) => {
+        console.log("Не удалось изменить пост");
+      });
+  };
 
   // удалиение поста
   const deletePost = (blogPost) => {
@@ -116,61 +117,65 @@ export const BlogPage = ({isAdmin}) => {
   //редактирование поста
   const handleSelectPost = (blogPost) => {
     setSelectedPost(blogPost);
-  }
- 
-    //=======пробегаем по массиву с данными
-    const blogPosts = blogArr.map((item) => {
-      return (
-        <BlogCard
-          key={item.id}
+  };
+
+  //=======пробегаем по массиву с данными
+  const blogPosts = blogArr.map((item) => {
+    return (
+      <div key={item.id}>
+        <BlogCard         
           title={item.title}
           descr={item.description}
           liked={item.liked}
           likePost={() => likePost(item)}
           deletePost={() => deletePost(item)}
           handleEditFormShow={handleEditFormShow}
-          handleSelectPost={()=> handleSelectPost(item)}
+          handleSelectPost={() => handleSelectPost(item)}
           isAdmin={isAdmin}
         />
-      );
-    });
-
-    if (blogArr.length === 0) return <h1>Загружаю данные...</h1>;
-
-    const postsOpacity  = isPanding ? 0.5: 1;
-
-    return (
-      <div className="count">
-        {showAddForm && (
-          <AddPostForm
-            blogArr={blogArr}
-            addNewBlogPost={addNewBlogPost}
-            handleAddFormHide={handleAddFormHide}
-          />
-        )}
-
-          {showEditForm && (
-            <EditPostForm 
-            blogArr={blogArr}   
-            editBlogPost={editBlogPost}
-            handleEditFormHide={handleEditFormHide}
-            selectedPost ={selectedPost}
-            />
-          )}
-
-        <>
-          <h1>Simple Blog</h1>
-
-          {isAdmin && <button className="blackBtn" onClick={handleAddFormShow}>
-            Создать новый пост
-          </button> }
-                 
-          <div className="posts" style={{opacity: postsOpacity}} >
-            {blogPosts}</div>
-        </>
-
-        {isPanding && <CircularProgress  className="preloader"/>}
-
+        <Link to={`/blog/${item.id}`}>Подробнее</Link>
       </div>
     );
-}
+  });
+
+  if (blogArr.length === 0) return <h1>Загружаю данные...</h1>;
+
+  const postsOpacity = isPanding ? 0.5 : 1;
+
+  return (
+    <div className="count">
+      {showAddForm && (
+        <AddPostForm
+          blogArr={blogArr}
+          addNewBlogPost={addNewBlogPost}
+          handleAddFormHide={handleAddFormHide}
+        />
+      )}
+
+      {showEditForm && (
+        <EditPostForm
+          blogArr={blogArr}
+          editBlogPost={editBlogPost}
+          handleEditFormHide={handleEditFormHide}
+          selectedPost={selectedPost}
+        />
+      )}
+
+      <>
+        <h1>Simple Blog</h1>
+
+        {isAdmin && (
+          <button className="blackBtn" onClick={handleAddFormShow}>
+            Создать новый пост
+          </button>
+        )}
+
+        <div className="posts" style={{ opacity: postsOpacity }}>
+          {blogPosts}
+        </div>
+      </>
+
+      {isPanding && <CircularProgress className="preloader" />}
+    </div>
+  );
+};
