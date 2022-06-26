@@ -1,96 +1,61 @@
-import { useState, useEffect } from "react";
-import { postsUrl } from "../../shared/projectData";
+import { useState } from "react";
 import { BlogCard } from "./components/BlogCard/BlogCard";
 import { AddPostForm } from "./components/AddPostForm/AddPostForm";
-import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { EditPostForm } from "./components/EditPostForm/EditPostForm";
 import { Link } from "react-router-dom";
+import { useGetPosts, useLikePost, useDeletePost, useEditPost, useAddPost } from "../../shared/queries";
 
 import "./BlogPage.css";
-
-let source;
 
 export const BlogPage = ({ isAdmin }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [blogArr, setBlogArr] = useState([]);
-  const [isPanding, setIsPanding] = useState(false);
   const [selectedPost, setSelectedPost] = useState({});
+
+  const {data: posts, isLoading, isError, error, isFetching, refetch} =  useGetPosts();
+
+  const likeMutation = useLikePost();
+  const deleteMutation = useDeletePost();
+  const editMutation = useEditPost();
+  const addMutation = useAddPost();
+  
+  if (isLoading) return <h1>Загружаю данные...</h1>;
+
+  if (isError) return <h1>{error.message}</h1> 
 
   //============методы======
 
-  //получение с сервера базы
-  const getPosts = () => {
-    source = axios.CancelToken.source();
-
-    axios
-      .get(postsUrl, source.token)
-      .then((response) => {
-        setBlogArr(response.data);
-        setIsPanding(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
 
   // лайк поста
   const likePost = (blogPost) => {
-    const temp = { ...blogPost };
-    temp.liked = !temp.liked;
-    axios
-      .put(`${postsUrl}${blogPost.id}`, temp)
-      .then((response) => {
-        getPosts();
-      })
-      .catch((err) => {
-        console.log("Не удалось изменить");
-      });
+    const updatedPost = { ...blogPost };
+    updatedPost.liked = !updatedPost.liked;
+    likeMutation.mutateAsync(updatedPost)
+    .then( refetch)
+    .catch((err)=> console.log(err))
   };
 
   //добавление поста
   const addNewBlogPost = (blogPost) => {
-    setIsPanding(true);
-    axios
-      .post(`${postsUrl}`, blogPost)
-      .then((response) => {
-        getPosts();
-      })
-      .catch((err) => {
-        console.log("Не удалось добавить пост");
-      });
+    addMutation.mutateAsync(blogPost)
+    .then(refetch)
+    .catch((err)=> console.log(err))
   };
 
   // изменение поста
   const editBlogPost = (updatedBlogPost) => {
-    setIsPanding(true);
-    axios
-      .put(`${postsUrl}${updatedBlogPost.id}`, updatedBlogPost)
-      .then((response) => {
-        getPosts();
-      })
-      .catch((err) => {
-        console.log("Не удалось изменить пост");
-      });
+    editMutation.mutateAsync(updatedBlogPost)
+    .then(refetch)
+    .catch((err)=> console.log(err))
   };
 
   // удалиение поста
   const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-      setIsPanding(true);
-      axios
-        .delete(`${postsUrl}${blogPost.id}`)
-        .then((response) => {
-          getPosts();
-        })
-        .catch((err) => {
-          console.log("Не удалось удалить пост");
-        });
+     deleteMutation.mutateAsync(blogPost)
+     .then(refetch)
+     .catch((err)=> console.log(err))
     }
   };
 
@@ -120,7 +85,7 @@ export const BlogPage = ({ isAdmin }) => {
   };
 
   //=======пробегаем по массиву с данными
-  const blogPosts = blogArr.map((item) => {
+  const blogPosts = posts.map((item) => {
     return (
       <div key={item.id}>
         <BlogCard         
@@ -138,15 +103,15 @@ export const BlogPage = ({ isAdmin }) => {
     );
   });
 
-  if (blogArr.length === 0) return <h1>Загружаю данные...</h1>;
+ 
 
-  const postsOpacity = isPanding ? 0.5 : 1;
+  const postsOpacity = isFetching ? 0.5 : 1;
 
   return (
     <div className="count">
       {showAddForm && (
         <AddPostForm
-          blogArr={blogArr}
+          
           addNewBlogPost={addNewBlogPost}
           handleAddFormHide={handleAddFormHide}
         />
@@ -154,7 +119,7 @@ export const BlogPage = ({ isAdmin }) => {
 
       {showEditForm && (
         <EditPostForm
-          blogArr={blogArr}
+          
           editBlogPost={editBlogPost}
           handleEditFormHide={handleEditFormHide}
           selectedPost={selectedPost}
@@ -175,7 +140,7 @@ export const BlogPage = ({ isAdmin }) => {
         </div>
       </>
 
-      {isPanding && <CircularProgress className="preloader" />}
+      {isFetching && <CircularProgress className="preloader" />}
     </div>
   );
 };

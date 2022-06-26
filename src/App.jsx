@@ -14,6 +14,7 @@ import { Header } from "./components/Header/Header";
 import { RequireAuth } from "./Hoc/RequireAuth";
 import { AuthProvider } from "./Hoc/AuthProvider";
 import { NoMatch } from "./Pages/NoMatch/NoMatch";
+import {useGetPosts} from './shared/queries';
 
 import "./App.css";
 
@@ -25,6 +26,8 @@ export function App() {
   const [isAdmin, setIsAdmin] = useState(
     localStorage.getItem("isAdmin") === "true"
   );
+
+  const {data, isLoading, isError, error, isFetching} =  useGetPosts();
 
   return (
     <AuthProvider>
