@@ -13,7 +13,7 @@ export const BlogPage = ({ isAdmin }) => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedPost, setSelectedPost] = useState({});
 
-  const {data: posts, isLoading, isError, error, isFetching, refetch} =  useGetPosts();
+  const {data: posts, isLoading, isError, error, isFetching} =  useGetPosts();
 
   const likeMutation = useLikePost();
   const deleteMutation = useDeletePost();
@@ -31,31 +31,23 @@ export const BlogPage = ({ isAdmin }) => {
   const likePost = (blogPost) => {
     const updatedPost = { ...blogPost };
     updatedPost.liked = !updatedPost.liked;
-    likeMutation.mutateAsync(updatedPost)
-    .then( refetch)
-    .catch((err)=> console.log(err))
+    likeMutation.mutate(updatedPost)
   };
 
   //добавление поста
   const addNewBlogPost = (blogPost) => {
-    addMutation.mutateAsync(blogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    addMutation.mutate(blogPost)
   };
 
   // изменение поста
   const editBlogPost = (updatedBlogPost) => {
-    editMutation.mutateAsync(updatedBlogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    editMutation.mutate(updatedBlogPost)   
   };
 
   // удалиение поста
   const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-     deleteMutation.mutateAsync(blogPost)
-     .then(refetch)
-     .catch((err)=> console.log(err))
+     deleteMutation.mutate(blogPost)
     }
   };
 

@@ -5,8 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CreateIcon from "@mui/icons-material/Create";
 import { CircularProgress } from "@mui/material";
-import axios from "axios";
-import { postsUrl } from "../../../../shared/projectData";
+
 import { EditPostForm } from "../EditPostForm/EditPostForm";
 import { useGetPost, useLikePost, useDeletePost, useEditPost } from "../../../../shared/queries";
 
@@ -23,7 +22,7 @@ export const BlogCardPage = ({
   const navigate = useNavigate();
 
   
-  const {data: post, isLoading, isError, error, isFetching, refetch} =  useGetPost(postId);
+  const {data: post, isLoading, isError, error, isFetching} =  useGetPost(postId);
 
   const likeMutation = useLikePost();
   const deleteMutation = useDeletePost();
@@ -38,25 +37,18 @@ export const BlogCardPage = ({
     const likePost = (blogPost) => {
       const updatedPost = { ...blogPost };
       updatedPost.liked = !updatedPost.liked;
-      likeMutation.mutateAsync(updatedPost)
-      .then( refetch)
-      .catch((err)=> console.log(err))
+      likeMutation.mutate(updatedPost)
     };
 
      // изменение поста
   const editBlogPost = (updatedBlogPost) => {
-    editMutation.mutateAsync(updatedBlogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    editMutation.mutate(updatedBlogPost)
   };
 
   // удалиение поста
   const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-     deleteMutation.mutateAsync(blogPost)
-     .then(navigate('/blog', {repalce: true}))
-     .catch((err)=> console.log(err))
-     
+     deleteMutation.mutate(blogPost)
     }
   };
 
