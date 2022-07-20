@@ -1,0 +1,21 @@
+.searchBar {
+    background-color: #f0f0f0;
+    width: fit-content;
+    border-radius: 5px;
+}
+
+.searchBar form {
+    display: flex;
+}
+
+.searchBar input {
+    background-color: #f0f0f0;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.searchBar button svg {
+    
+}

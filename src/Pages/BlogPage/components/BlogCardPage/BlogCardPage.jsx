@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CreateIcon from "@mui/icons-material/Create";
 import { CircularProgress } from "@mui/material";
-import axios from "axios";
-import { postsUrl } from "../../../../shared/projectData";
+
 import { EditPostForm } from "../EditPostForm/EditPostForm";
 import { useGetPost, useLikePost, useDeletePost, useEditPost } from "../../../../shared/queries";
 
@@ -23,7 +22,7 @@ export const BlogCardPage = ({
   const navigate = useNavigate();
 
   
-  const {data: post, isLoading, isError, error, isFetching, refetch} =  useGetPost(postId);
+  const {data: post, isLoading, isError, error, isFetching} =  useGetPost(postId);
 
   const likeMutation = useLikePost();
   const deleteMutation = useDeletePost();
@@ -38,25 +37,18 @@ export const BlogCardPage = ({
     const likePost = (blogPost) => {
       const updatedPost = { ...blogPost };
       updatedPost.liked = !updatedPost.liked;
-      likeMutation.mutateAsync(updatedPost)
-      .then( refetch)
-      .catch((err)=> console.log(err))
+      likeMutation.mutate(updatedPost)
     };
 
      // изменение поста
   const editBlogPost = (updatedBlogPost) => {
-    editMutation.mutateAsync(updatedBlogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    editMutation.mutate(updatedBlogPost)
   };
 
   // удалиение поста
   const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-     deleteMutation.mutateAsync(blogPost)
-     .then(navigate('/blog', {repalce: true}))
-     .catch((err)=> console.log(err))
-     
+     deleteMutation.mutate(blogPost)
     }
   };
 
@@ -80,7 +72,7 @@ export const BlogCardPage = ({
   const postsOpacity = isFetching ? 0.5 : 1;
 
   return (
-    <div className="post">
+    <div className="postPage">
        {showEditForm && (
         <EditPostForm        
           editBlogPost={editBlogPost}
@@ -88,14 +80,16 @@ export const BlogCardPage = ({
           selectedPost={selectedPost}
         />
       )}
-      <div className="postContent" style={{ opacity: postsOpacity }}>
-        <h2>{post.title}</h2>
-        <p> {post.description}</p>
-        <div>
+      <div className="postContentPage" style={{ opacity: postsOpacity }}>
+      <div className="postTitlePage">
+          <h2>{post.title}</h2>
           <button onClick={() => likePost(post)}>
             <FavoriteIcon style={{ fill: heartFill }} />
           </button>
         </div>
+        
+        <p> {post.description}</p>
+        
       </div>
       {isAdmin && (
         <div className="postControl">

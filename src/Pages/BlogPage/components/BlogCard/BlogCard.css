@@ -1,25 +1,48 @@
 .post {
     display: flex;
-    align-items: center;
+    align-items: space-between;
+    width: 400px;
+    min-height: 170px;
     justify-content: space-between;
+    padding: 20px;
 }
 
 .postContent {
-    max-width: 500px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content: start;
 }
 
+.postTitle {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.postTitle h2{
+    border-bottom: 1px solid #000;
+}
+
 .postContent p {
     text-align: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
 .postControl {
     padding: 0;
     margin: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #5c5656;
     
 }
 

@@ -1,6 +1,6 @@
 .count {
     text-align: center;
-    position: relative;
+    position: relative; 
 }
 
 .count .preloader {
@@ -22,13 +22,38 @@
     transition-timing-function: ease-in-out;
 } */
 
-.count button:hover {
-   
-}
-
 .posts {
-    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     margin: 0 auto;
     position: relative;
+}
+
+.blogPost {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.22);
+    border-radius: 10px;
+    margin: 10px;
+    
+}
+
+.blogPostMore {
+    display: flex;
+    align-items: center;
+    transition: all 0.5s;
+}
+
+.blogPostMore:hover {
+    opacity: 0.5;
+}
+
+.newPostBtn {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 

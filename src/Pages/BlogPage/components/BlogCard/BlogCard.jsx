@@ -18,20 +18,20 @@ export const BlogCard = ({
     handleSelectPost();
     handleEditFormShow();
   };
- 
-   const heartFill = liked ? "crimson" : "black";
-  
+
+  const heartFill = liked ? "crimson" : "black";
 
   return (
     <div className="post">
       <div className="postContent">
-        <h2>{title}</h2>
-        <p> {descr}</p>
-        <div>
+        <div className="postTitle">
+          <h2>{title}</h2>
           <button onClick={likePost}>
             <FavoriteIcon style={{ fill: heartFill }} />
           </button>
         </div>
+
+        <p>{descr}</p>
       </div>
       {isAdmin && (
         <div className="postControl">

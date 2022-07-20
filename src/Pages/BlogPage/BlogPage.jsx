@@ -4,21 +4,26 @@ import { AddPostForm } from "./components/AddPostForm/AddPostForm";
 import { CircularProgress } from "@mui/material";
 import { EditPostForm } from "./components/EditPostForm/EditPostForm";
 import { Link } from "react-router-dom";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useGetPosts, useLikePost, useDeletePost, useEditPost, useAddPost } from "../../shared/queries";
 
 import "./BlogPage.css";
+import Head from "../../components/Head/Head";
 
-export const BlogPage = ({ isAdmin }) => {
+export const BlogPage = ({ isAdmin, searchKey, filteredPosts }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedPost, setSelectedPost] = useState({});
+ 
 
-  const {data: posts, isLoading, isError, error, isFetching, refetch} =  useGetPosts();
+  const {data: posts, isLoading, isError, error, isFetching} =  useGetPosts();
 
   const likeMutation = useLikePost();
   const deleteMutation = useDeletePost();
   const editMutation = useEditPost();
   const addMutation = useAddPost();
+
+ 
   
   if (isLoading) return <h1>Загружаю данные...</h1>;
 
@@ -31,31 +36,23 @@ export const BlogPage = ({ isAdmin }) => {
   const likePost = (blogPost) => {
     const updatedPost = { ...blogPost };
     updatedPost.liked = !updatedPost.liked;
-    likeMutation.mutateAsync(updatedPost)
-    .then( refetch)
-    .catch((err)=> console.log(err))
+    likeMutation.mutate(updatedPost)
   };
 
   //добавление поста
   const addNewBlogPost = (blogPost) => {
-    addMutation.mutateAsync(blogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    addMutation.mutate(blogPost)
   };
 
   // изменение поста
   const editBlogPost = (updatedBlogPost) => {
-    editMutation.mutateAsync(updatedBlogPost)
-    .then(refetch)
-    .catch((err)=> console.log(err))
+    editMutation.mutate(updatedBlogPost)   
   };
 
   // удалиение поста
   const deletePost = (blogPost) => {
     if (window.confirm(`Удалить ${blogPost.title} ?`)) {
-     deleteMutation.mutateAsync(blogPost)
-     .then(refetch)
-     .catch((err)=> console.log(err))
+     deleteMutation.mutate(blogPost)
     }
   };
 
@@ -85,9 +82,9 @@ export const BlogPage = ({ isAdmin }) => {
   };
 
   //=======пробегаем по массиву с данными
-  const blogPosts = posts.map((item) => {
+  const blogPosts =filteredPosts.length>0?filteredPosts.map((item) => {
     return (
-      <div key={item.id}>
+      <div className="blogPost" key={item.id}>
         <BlogCard         
           title={item.title}
           descr={item.description}
@@ -98,7 +95,24 @@ export const BlogPage = ({ isAdmin }) => {
           handleSelectPost={() => handleSelectPost(item)}
           isAdmin={isAdmin}
         />
-        <Link to={`/blog/${item.id}`}>Подробнее</Link>
+        <Link to={`/blog/${item.id}`} className="blogPostMore"><p>Подробнее</p> <ArrowForwardIosIcon /> </Link>
+      </div>
+    );
+  }):
+  posts.map((item) => {
+    return (
+      <div className="blogPost" key={item.id}>
+        <BlogCard         
+          title={item.title}
+          descr={item.description}
+          liked={item.liked}
+          likePost={() => likePost(item)}
+          deletePost={() => deletePost(item)}
+          handleEditFormShow={handleEditFormShow}
+          handleSelectPost={() => handleSelectPost(item)}
+          isAdmin={isAdmin}
+        />
+        <Link to={`/blog/${item.id}`} className="blogPostMore"><p>Подробнее</p> <ArrowForwardIosIcon /> </Link>
       </div>
     );
   });
@@ -108,18 +122,17 @@ export const BlogPage = ({ isAdmin }) => {
   const postsOpacity = isFetching ? 0.5 : 1;
 
   return (
+
     <div className="count">
       {showAddForm && (
-        <AddPostForm
-          
+        <AddPostForm       
           addNewBlogPost={addNewBlogPost}
           handleAddFormHide={handleAddFormHide}
         />
       )}
 
       {showEditForm && (
-        <EditPostForm
-          
+        <EditPostForm       
           editBlogPost={editBlogPost}
           handleEditFormHide={handleEditFormHide}
           selectedPost={selectedPost}
@@ -127,10 +140,10 @@ export const BlogPage = ({ isAdmin }) => {
       )}
 
       <>
-        <h1>Simple Blog</h1>
+      <Head />
 
         {isAdmin && (
-          <button className="blackBtn" onClick={handleAddFormShow}>
+          <button className="blackBtn newPostBtn" onClick={handleAddFormShow}>
             Создать новый пост
           </button>
         )}
