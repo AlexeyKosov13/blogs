@@ -64,7 +64,7 @@ export const EditPostForm = (props) => {
             <textarea
               name="postDescr"
               placeholder="Описание поста..."
-              className="editFormInput"
+              className="editFormInputText"
               value={postDescr}
               onChange={handlePostDescrChange}
             />

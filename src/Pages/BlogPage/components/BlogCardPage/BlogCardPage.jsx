@@ -27,7 +27,6 @@ export const BlogCardPage = ({
   const likeMutation = useLikePost();
   const deleteMutation = useDeletePost();
   const editMutation = useEditPost();
-
    
   if (isLoading) return <h1>Загружаю данные...</h1>;
 
@@ -87,8 +86,7 @@ export const BlogCardPage = ({
             <FavoriteIcon style={{ fill: heartFill }} />
           </button>
         </div>
-        
-        <p> {post.description}</p>
+        <p className="postPageDescr">{post.description}</p>
         
       </div>
       {isAdmin && (

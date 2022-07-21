@@ -3,7 +3,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BlogCardPage } from "./Pages/BlogPage/components/BlogCardPage/BlogCardPage";
 import { BlogPage } from "./Pages/BlogPage/BlogPage";
 import { LoginPage } from "./Pages/LoginPage/LoginPage";
@@ -13,7 +13,6 @@ import { RequireAuth } from "./Hoc/RequireAuth";
 import { AuthProvider } from "./Hoc/AuthProvider";
 import { NoMatch } from "./Pages/NoMatch/NoMatch";
 import { useGetPosts } from "./shared/queries";
-import EmptyPage from "./Pages/EmptyPage/EmptyPage";
 
 import "./App.css";
 import Contacts from "./Pages/Contacts/Contacts";
@@ -29,13 +28,16 @@ export function App() {
   
   const { data: posts} = useGetPosts();
 
+  // useEffect(() => {
+  //   setFilteredPost(posts);
+  // },[])
+
   const [filteredPosts, setFilteredPost] = useState({});
 
   const [searchKey, setSearchKey] = useState();
 
   const handleClearSearch =() => {
     setFilteredPost(posts);
-    console.log(1);
     setSearchKey('');
   }
 
@@ -46,23 +48,30 @@ export function App() {
 
   const handleSearchResults= () => {
     const allBlogs = posts;
+    console.log(searchKey);
     const filteredBlogs = allBlogs.filter((blog) => blog.description.toLowerCase().includes(searchKey.toLowerCase().trim()));
+    console.log(filteredBlogs);
     setFilteredPost(filteredBlogs);
   };
+
+  const handleSearchKey = (e) => {
+    setSearchKey(e.target.value);
+    handleSearchResults();
+  }
 
 
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <Header handleClearSearch={handleClearSearch} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} searchKey={searchKey} setSearchKey={setSearchKey} handleSearchSubmit={handleSearchSubmit} />
+          <Header handleSearchKey={handleSearchKey} handleClearSearch={handleClearSearch} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} searchKey={searchKey} setSearchKey={setSearchKey} handleSearchSubmit={handleSearchSubmit} />
           <main>
             <Routes>
               <Route
                 path="/"
                 element={
                   <RequireAuth>
-                    {!filteredPosts.length?<EmptyPage/>:<BlogPage  searchKey={searchKey} filteredPosts={filteredPosts}/>}
+                    {<BlogPage  searchKey={searchKey} filteredPosts={filteredPosts}/>}
                   </RequireAuth>
                 }
                 exact
@@ -83,7 +92,7 @@ export function App() {
                 path="/blog"
                 element={
                   <RequireAuth>
-                    {!filteredPosts.length?<EmptyPage/>:<BlogPage isAdmin={isAdmin} searchKey={searchKey} filteredPosts={filteredPosts}/>}
+                    {<BlogPage isAdmin={isAdmin} searchKey={searchKey} filteredPosts={filteredPosts}/>}
                   </RequireAuth>
                 }
                 exact

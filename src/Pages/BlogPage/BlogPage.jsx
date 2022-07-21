@@ -148,6 +148,9 @@ export const BlogPage = ({ isAdmin, searchKey, filteredPosts }) => {
           </button>
         )}
 
+       {searchKey && (filteredPosts.length>0?(<div className="blogPageSearchResult">Найдены по запросу: {searchKey}</div>):
+       (<div className="blogPageSearchResult">Ничего не найдено</div>))} 
+
         <div className="posts" style={{ opacity: postsOpacity }}>
           {blogPosts}
         </div>

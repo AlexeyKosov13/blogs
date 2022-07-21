@@ -15,6 +15,7 @@ export const Header = ({
   searchKey,
   handleClearSearch,
   handleSearchSubmit,
+  handleSearchKey,
 
 }) => {
   const { user } = UseAuth();
@@ -38,7 +39,7 @@ export const Header = ({
           value={searchKey}
           clearSearch={handleClearSearch}
           formSubmit={handleSearchSubmit}
-          handleSearchKey={(e) => setSearchKey(e.target.value)}
+          handleSearchKey={handleSearchKey}
         />
       </div>
       <div className="topCenter">

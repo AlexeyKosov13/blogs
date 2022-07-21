@@ -6,6 +6,7 @@
 
 .searchBar form {
     display: flex;
+   
 }
 
 .searchBar input {
@@ -16,6 +17,16 @@
     padding: 5px;
 }
 
+.searchBar span {
+   cursor: pointer;
+}
+
+.searchBar span svg {
+    padding-top: 3px;
+}
+
 .searchBar button svg {
+    padding-top: 3px;
+    
     
 }

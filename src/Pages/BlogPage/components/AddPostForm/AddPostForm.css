@@ -6,7 +6,7 @@
     z-index: 100;
 
     background-color: white;
-    width: 350px;
+    width: 450px;
     padding: 20px;
 
     text-align: center;
@@ -38,6 +38,13 @@
 
 .addFormInput:focus::placeholder {
     color: transparent;
+}
+
+.addFormInputText {
+    padding: 4px 5px;
+    border-radius: 8px;
+    border: 1px solid rgb(138, 136, 136);
+    min-height: 200px;
 }
 
 .overlay {
